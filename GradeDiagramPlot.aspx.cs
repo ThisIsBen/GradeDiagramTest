@@ -15,22 +15,24 @@ namespace GradeDiagramTest
     public partial class GradeDiagramPlot : System.Web.UI.Page
     {
         // Student Scroe and Question from Database
-
-        public string []FirstColDefault = {"學生","Question1總分"};
+        public string[] QuestionName = {"Knee","Hand" };
+        public string []FirstColDefault = {"學生","總分"};
         //
        
         List<ScoreAnalysisM> ScoreAnalysisList = new List<ScoreAnalysisM>();
         private int table_rows;
         private int table_cols;
-        private int []QuestionAvg;
+
+        private List<int[]> QuestionAvgtest=new List<int[]>();
+
         private int MemberQuestionNum;
         private int studentNum;
-        private int currentQuestion=1;
+        static private int currentQuestion=0;
         private int data_implicit_num = 1;
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
         private TableCell tc_temp;
-        
+        Table []temp_table ;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -51,23 +53,95 @@ namespace GradeDiagramTest
             }
 
 
-            ////Initalize the member variable
-            MemberVariableSet(currentQuestion);
+            //// Add a row named Avg
+            AddRow("Avg");
+            
+            MemberQueAvgCal();
 
+            temp_table = new Table[QuestionName.Length];
+            DynamicTabStr(QuestionName.Length, QuestionName);
+            
             
 
-            GenerateTable(table_cols, table_rows);
 
+            /// plot the chart
+            chartPlotJs.InnerHtml = ChartPlotStr("donut", "chart");
+           
+            
+        }
+
+        
+        private void DynamicTabStr(int tab_num,string[] question_name)
+        {
+
+
+            Panel temp_div;
+            StringBuilder sb=new StringBuilder();
+            for (int i = 0; i < tab_num; i++)
+            {
+
+                temp_table[i] = new Table();
+                temp_div = new Panel();
+                tab_content_control.Controls.Add(temp_div);
+                temp_div.ID = QuestionName[i];
+                temp_div.Controls.Add(temp_table[i]);
+                MemberVariableSet(i);
+                GenerateTable(table_cols, table_rows, temp_table[i]);
+                
+                if (i == 0)
+                {
+                    temp_div.Attributes.Add("class", "tab-pane fade in active");                   
+                    
+                    // nav_control innerHtml add string 
+                    sb.Append("<li class=\"active\"><a data-toggle=\"tab\" href=\"#" + question_name[i] + "\">" + question_name[i] + "</a></li>");
+                }
+                else
+                {
+                    temp_div.Attributes.Add("class", "tab-pane ");
+                    
+                    // nav_control innerHtml add string 
+                    sb.Append("<li><a data-toggle=\"tab\" href=\"#" + question_name[i] + "\">" + question_name[i] + "</a></li>");
+                }
+            }
+            nav_control.InnerHtml = sb.ToString();
+
+        }
+
+        private string ChartPlotStr(string type,string question)
+        {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < MemberQuestionNum; i++)
             {
                 string temp2;
-                temp2 = "['第" + (i + 1) + "題'," + QuestionAvg[i] + "],";
+                temp2 = "['第" + (i + 1) + "題'," + QuestionAvgtest[0][i] + "],";
                 sb.Append(temp2);
 
             }
-            chart.InnerHtml = "<script>var chart = c3.generate({bindto: '#chart',data: {columns: [" + sb.ToString() + "],type : 'pie'}});</script>";
-            
+            return "<script>var " + question + " = c3.generate({bindto: '#" + question + "',data: {columns: [" + sb.ToString() + "],type : '" + type + "'}});</script>";
+
+        }
+
+        private void MemberQueAvgCal()
+        {
+            int Question_start=ScoreAnalysisList[0].QueIndex_start;
+            int QuestionNum= ScoreAnalysisList[0].QuestionNum;
+            int[] QuestionAvgTemp; 
+            for (int QueIndex = 0; QueIndex < QuestionNum; QueIndex++)
+            {
+                int MemberQuestionNum = ScoreAnalysisList[0].MemberQuestionNum[QueIndex];
+                QuestionAvgTemp = new int[MemberQuestionNum];
+                for (int index = 0; index < MemberQuestionNum; index++)
+                {
+                    int sum = 0;
+                    for (int student = 0; student < ScoreAnalysisList.Count; student++)
+                        sum = Convert.ToInt16(ScoreAnalysisList[student].Grade[QueIndex][Question_start+index]) + sum;
+                    sum = sum / ScoreAnalysisList.Count;
+                    QuestionAvgTemp[index] = sum;
+                }
+                QuestionAvgtest.Add(QuestionAvgTemp);
+            }
+
+
         }
 
         private void MemberVariableSet(int Question_num)
@@ -77,14 +151,16 @@ namespace GradeDiagramTest
             table_rows = ScoreAnalysisList.Count;
             studentNum = table_rows;
             MemberQuestionNum = ScoreAnalysisList[0].MemberQuestionNum[currentQuestion];
-            //// Add a row named Avg
-            AddRow("Avg");
+            
         }
 
         protected void DownLoadToExl_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine(currentQuestion);
             DownLoadFile();
+            
         }
+
         private void DownLoadFile() // Convert Table to excel file
         {
             Response.ClearContent();
@@ -93,7 +169,7 @@ namespace GradeDiagramTest
             Response.Write('\uFEFF');       // Add this, then the saved file will include BOM.
             StringWriter tw = new StringWriter();
             HtmlTextWriter hw = new HtmlTextWriter(tw);
-            Table_div.RenderControl(hw);
+            tab_content_control.RenderControl(hw);
             this.EnableViewState = false;
             Response.Write(tw.ToString());
             Response.End();
@@ -102,13 +178,13 @@ namespace GradeDiagramTest
 
         private void InsertTableStr(int row, int col, string str_insert)
         {
-            tc_temp = (TableCell)FindControl("TextBoxRow_"+row+"Col_" + col);
+            tc_temp = (TableCell)FindControl("TextBoxRow_"+row+"Col_" + col+"_"+currentQuestion);
             tc_temp.Text = str_insert;
         }
 
         private string GetTableStr(int row, int col)
         {
-            tc_temp = (TableCell)FindControl("TextBoxRow_" + row + "Col_" + col);
+            tc_temp = (TableCell)FindControl("TextBoxRow_" + row + "Col_" + col + "_" + currentQuestion);
             return tc_temp.Text;
         }
 
@@ -124,15 +200,14 @@ namespace GradeDiagramTest
             table_cols++;
         }
 
-        private void GenerateTable(int colsCount, int rowsCount)
+        private void GenerateTable(int colsCount, int rowsCount,Table table_select)
         {
 
             //Creat the Table and Add it to the Page
-            
-            Table_div.Attributes.Add("border", "1");
-            Table_div.Attributes.Add("cellpadding", "1");
-            Table_div.Attributes.Add("cellspacing", "1");
-            Table_div.Style.Add("width", "100%");
+            table_select.Attributes.Add("border", "1");
+            table_select.Attributes.Add("cellpadding", "1");
+            table_select.Attributes.Add("cellspacing", "1");
+            table_select.Style.Add("width", "100%");
        
             // Now iterate through the table and add your controls 
             for (int i = 0; i <= rowsCount; i++)
@@ -141,11 +216,11 @@ namespace GradeDiagramTest
                 for (int j = 0; j < colsCount; j++)
                 {
                     TableCell cell = new TableCell();
-                    cell.ID = "TextBoxRow_" + i + "Col_" + j;
+                    cell.ID = "TextBoxRow_" + i + "Col_" + j + "_" + currentQuestion;
                     row.Controls.Add(cell);
                     row.Cells.Add(cell);
                 }
-                Table_div.Rows.Add(row);
+                table_select.Rows.Add(row);
             }
 
             for (int i = 1; i <= rowsCount - AddRowsName.Count; i++)
@@ -174,19 +249,14 @@ namespace GradeDiagramTest
             
                 
             //Average Calculage
-            QuestionAvg = new int[MemberQuestionNum];
             for (int index = 0; index <MemberQuestionNum; index++)
             {
-                int sum = 0;
-                for (int row = 1; row <= studentNum; row++)
-                    sum = Convert.ToInt16(GetTableStr(row, index+FirstColDefault.Length)) + sum;
-                sum=sum/studentNum;
-                InsertTableStr(rowsCount, index + FirstColDefault.Length, sum.ToString());
-                QuestionAvg[index] = sum;
+                string sum = QuestionAvgtest[currentQuestion][index].ToString();
+                InsertTableStr(rowsCount, index + FirstColDefault.Length,sum);
             }
             
+            
         }
-
 
     }
 }

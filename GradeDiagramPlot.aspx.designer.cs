@@ -22,22 +22,22 @@ namespace GradeDiagramTest {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// Table_div 控制項。
+        /// nav_control 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table_div;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl nav_control;
         
         /// <summary>
-        /// DownLoadToExl 控制項。
+        /// tab_content_control 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button DownLoadToExl;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab_content_control;
         
         /// <summary>
         /// chart 控制項。
@@ -47,5 +47,32 @@ namespace GradeDiagramTest {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl chart;
+        
+        /// <summary>
+        /// nav_control_button 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl nav_control_button;
+        
+        /// <summary>
+        /// DownLoadToExl 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton DownLoadToExl;
+        
+        /// <summary>
+        /// chartPlotJs 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chartPlotJs;
     }
 }
