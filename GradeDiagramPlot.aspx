@@ -4,21 +4,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<script src="./d3-3.5.0/d3.min.js" charset="utf-8"></script>
-<script src="./c3-0.4.15/c3.min.js"></script>  
-<script src="./Scripts/jquery-1.10.2.min.js"></script>
-<script src="./Scripts/bootstrap.min.js"></script>
+    <script src="./d3-3.5.0/d3.min.js" charset="utf-8"></script>
+    <script src="./c3-0.4.15/c3.min.js"></script>
+    <script src="./Scripts/jquery-1.10.2.min.js"></script>
+    <script src="./Scripts/bootstrap.min.js"></script>
+    <script>
+        var Knee;
+        var Hand;
+    </script>
 
-<link rel="stylesheet" href="./c3-0.4.15/c3.css"/> 
-<link rel="stylesheet" href="./Content/bootstrap.min.css"/>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="./c3-0.4.15/c3.css" />
+    <link rel="stylesheet" href="./Content/bootstrap.min.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
 </head>
 <body>
     <form id="form1" runat="server">
 
         <ul id="nav_control" class="nav nav-tabs" runat="server">
-
         </ul>
 
 
@@ -33,24 +36,52 @@
             <div id="menu1" class="tab-pane fade">
                 <asp:table id="Table_div_test" runat="server"/>
             </div>--%>
-            
         </div>
 
-        <div id="chart" runat="server"/>
-       
-         <ul id="nav_control_button" class="nav nav-tabs" runat="server">
-             <li ><asp:LinkButton  data-toggle="tab" class="btn" onClick="DownLoadToExl_Click" runat="server">Pie Chart</asp:LinkButton></li>
-             <li ><a  data-toggle="tab" class="btn" href="#donut"  runat="server">Donut Chart</a></li>
-             <li><asp:LinkButton id="DownLoadToExl" class="btn" onClick="DownLoadToExl_Click" runat="server">Download Excel</asp:LinkButton></li>
-         </ul>
 
-      
-        <div id="chartPlotJs" runat="server"/>
-    
+
+        <ul id="nav_control_button" class="nav nav-tabs" runat="server">
+            <li><a data-toggle="tab" href=".pie" runat="server">Pie Chart</a></li>
+            <li><a data-toggle="tab" href=".donut" runat="server">Donut Chart</a></li>
+            <li>
+                <asp:LinkButton ID="DownLoadToExl" class="btn" OnClick="DownLoadToExl_Click" runat="server">Download Excel</asp:LinkButton></li>
+        </ul>
+
+
+        <%-- Test Static Code --%>
+        <div class="tab-content" runat="server">
+            <div class="tab-pane fade Knee KneeChart" runat="server">
+            </div>
+            <div class="tab-pane fade Hand HandChart" runat="server">
+            </div>
+
+            <div id="chartPlotJs" runat="server"></div>
+
+
+        </div>
+
+
+
+        <div class="tab-content">
+
+            <div class="tab-pane fade pie">
+                <script>
+                    Knee.transform("pie");
+                    Hand.transform("pie");
+                </script>
+</div>
+            <div class="tab-pane fade donut">
+                <script>
+                    Knee.transform("donut");
+                    Hand.transform("donut");
+                </script>
+            </div>
+        </div>
+
 
     </form>
-    
-  <%--  <div class="container">
+
+    <%--  <div class="container">
   <h2>Dynamic Tabs</h2>
   <p>To make the tabs toggleable, add the data-toggle="tab" attribute to each link. Then add a .tab-pane class with a unique ID for every tab and wrap them inside a div element with class .tab-content.</p>
 
@@ -80,8 +111,6 @@
     </div>
   </div>
 </div>--%>
-
-    
 </body>
 </html>
 

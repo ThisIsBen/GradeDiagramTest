@@ -40,15 +40,6 @@ namespace GradeDiagramTest {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab_content_control;
         
         /// <summary>
-        /// chart 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chart;
-        
-        /// <summary>
         /// nav_control_button 控制項。
         /// </summary>
         /// <remarks>

@@ -27,7 +27,7 @@ namespace GradeDiagramTest
 
         private int MemberQuestionNum;
         private int studentNum;
-        static private int currentQuestion=0;
+        private int currentQuestion=0;
         private int data_implicit_num = 1;
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
@@ -65,8 +65,11 @@ namespace GradeDiagramTest
 
 
             /// plot the chart
-            chartPlotJs.InnerHtml = ChartPlotStr("donut", "chart");
-           
+            Debug.WriteLine(QuestionAvgtest[0].ToString());
+            StringBuilder sb=new StringBuilder();
+            for (int i = 0; i < QuestionName.Length; i++)
+                sb.Append(ChartPlotStr("donut", QuestionName[i],i));
+            chartPlotJs.InnerHtml = sb.ToString();
             
         }
 
@@ -83,41 +86,41 @@ namespace GradeDiagramTest
                 temp_table[i] = new Table();
                 temp_div = new Panel();
                 tab_content_control.Controls.Add(temp_div);
-                temp_div.ID = QuestionName[i];
+                temp_div.ID = question_name[i] + "Table";
                 temp_div.Controls.Add(temp_table[i]);
                 MemberVariableSet(i);
                 GenerateTable(table_cols, table_rows, temp_table[i]);
                 
                 if (i == 0)
                 {
-                    temp_div.Attributes.Add("class", "tab-pane fade in active");                   
+                    temp_div.Attributes.Add("class", "tab-pane fade in active " + question_name[i]);                   
                     
                     // nav_control innerHtml add string 
-                    sb.Append("<li class=\"active\"><a data-toggle=\"tab\" href=\"#" + question_name[i] + "\">" + question_name[i] + "</a></li>");
+                    sb.Append("<li class=\"active\"><a data-toggle=\"tab\" href=\"." + question_name[i] + "\">" + question_name[i] + "</a></li>");
                 }
                 else
                 {
-                    temp_div.Attributes.Add("class", "tab-pane ");
+                    temp_div.Attributes.Add("class", "tab-pane fade " + question_name[i]);
                     
                     // nav_control innerHtml add string 
-                    sb.Append("<li><a data-toggle=\"tab\" href=\"#" + question_name[i] + "\">" + question_name[i] + "</a></li>");
+                    sb.Append("<li><a data-toggle=\"tab\" href=\"." + question_name[i] + "\">" + question_name[i] + "</a></li>");
                 }
             }
             nav_control.InnerHtml = sb.ToString();
 
         }
 
-        private string ChartPlotStr(string type,string question)
+        private string ChartPlotStr(string type,string question,int question_num)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < MemberQuestionNum; i++)
             {
                 string temp2;
-                temp2 = "['第" + (i + 1) + "題'," + QuestionAvgtest[0][i] + "],";
+                temp2 = "['第" + (i + 1) + "題'," + QuestionAvgtest[question_num][i] + "],";
                 sb.Append(temp2);
 
             }
-            return "<script>var " + question + " = c3.generate({bindto: '#" + question + "',data: {columns: [" + sb.ToString() + "],type : '" + type + "'}});</script>";
+            return "<script>var " + question + " = c3.generate({bindto: '." + question+"Chart" + "',data: {columns: [" + sb.ToString() + "],type : '" + type + "'}});</script>";
 
         }
 
