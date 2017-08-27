@@ -10,7 +10,7 @@
     <script src="./Scripts/bootstrap.min.js"></script>
     <script>
         var question;
-        var type="pie";
+        var type="bar";
         $(document).ready(function(){
             $(".pie").click(function () {
                 type = "pie";
@@ -19,6 +19,10 @@
             $(".donut").click(function () {
                 type = "donut";
                 chart[question].transform("donut");
+            });
+            $(".bar").click(function () {
+                type = "bar";
+                chart[question].transform("bar");
             });
         })
     </script>
@@ -49,8 +53,9 @@
 
         <%-- type tab and download --%>
         <ul id="nav_control_button" class="nav nav-tabs" runat="server">
-            <li class="pie active"><a data-toggle="tab" href="#" runat="server">Pie Chart</a></li>
-            <li class="donut"><a data-toggle="tab" href="#" runat="server">Donut Chart</a></li>
+            <li class="bar active"><a data-toggle="tab" href="#" >Bar Chart</a></li>
+            <li class="pie "><a data-toggle="tab" href="#" >Pie Chart</a></li>
+            <li class="donut"><a data-toggle="tab" href="#" >Donut Chart</a></li>
             <li>
                 <asp:LinkButton ID="DownLoadToExl" class="btn" OnClick="DownLoadToExl_Click" runat="server">Download Excel</asp:LinkButton></li>
         </ul>

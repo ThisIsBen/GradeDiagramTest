@@ -16,7 +16,10 @@ namespace GradeDiagramTest
     {
         // Student Scroe and Question from Database
         public string[] QuestionName = {"Knee","Hand" };
+        public List<string[]> MemberQuestionName=new List<string[]>();
         public string []FirstColDefault = {"學生","總分"};
+
+
         //
        
         List<ScoreAnalysisM> ScoreAnalysisList = new List<ScoreAnalysisM>();
@@ -31,7 +34,7 @@ namespace GradeDiagramTest
         private int data_implicit_num = 1;
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
-        private TableCell tc_temp;
+        
         
 
         protected void Page_Load(object sender, EventArgs e)
@@ -42,7 +45,8 @@ namespace GradeDiagramTest
             //下方3個變數的值之後會由DB取得
             //get all the data from ScoreDetailTB table
             DataTable dt = CsDBOp.GetAllTBData();
-            
+            MemberQuestionName.Add(new string[] { "adducor", "fadf", "asdf", "dfefa","adsfas" });
+            MemberQuestionName.Add(new string[]{ "adducor", "fadf", "asdf", "dfefa" } );
 
             //Get the retrieved data from each row of the retrieved data table.
             foreach (DataRow dr in dt.Rows)
@@ -78,9 +82,9 @@ namespace GradeDiagramTest
             for (int i = 0; i < QuestionName.Length; i++)
             {
                 if (i == 0)
-                    sb.Append("<div class='tab-pane in active " + QuestionName[i] + "Table " + QuestionName[i] + "Chart'></div>");
+                    sb.Append("<div class='tab-pane fade in active " + QuestionName[i] + "Table " + QuestionName[i] + "Chart'></div>");
                 else
-                    sb.Append("<div class='tab-pane " + QuestionName[i] + "Table " + QuestionName[i] + "Chart'></div>");
+                    sb.Append("<div class='tab-pane fade " + QuestionName[i] + "Table " + QuestionName[i] + "Chart'></div>");
             }
             return sb.ToString();
         }
@@ -90,7 +94,7 @@ namespace GradeDiagramTest
             StringBuilder sb=new StringBuilder();
             sb.Append("<script> var chart={");
             for (int i = 0; i < QuestionName.Length; i++)
-                sb.Append(ChartPlotStr("pie", QuestionName[i],i));
+                sb.Append(ChartPlotStr("bar", QuestionName[i],i));
             sb.Append("}</script>");
             return sb.ToString();
         }
@@ -159,7 +163,7 @@ namespace GradeDiagramTest
             for (int i = 0; i < QuestionAvgtest[question_number].Length; i++)
             {
                 string temp2;
-                temp2 = "['第" + (i + 1) + "題'," + QuestionAvgtest[question_number][i] + "],";
+                temp2 = "['" + MemberQuestionName[question_number][i]+ "'," + QuestionAvgtest[question_number][i] + "],";
                 sb.Append(temp2);
 
             }
@@ -224,12 +228,14 @@ namespace GradeDiagramTest
 
         private void InsertTableStr(int row, int col, string str_insert)
         {
+            TableCell tc_temp;
             tc_temp = (TableCell)FindControl("TextBoxRow_"+row+"Col_" + col+"_"+currentQuestion);
             tc_temp.Text = str_insert;
         }
 
         private string GetTableStr(int row, int col)
         {
+            TableCell tc_temp;
             tc_temp = (TableCell)FindControl("TextBoxRow_" + row + "Col_" + col + "_" + currentQuestion);
             return tc_temp.Text;
         }
@@ -280,7 +286,7 @@ namespace GradeDiagramTest
                 InsertTableStr(0, i, FirstColDefault[i]);
             
             for (int i = 1; i <=MemberQuestionNum; i++)
-                InsertTableStr(0, i+FirstColDefault.Length-1, "第" + (i) + "題");
+                InsertTableStr(0, i+FirstColDefault.Length-1, MemberQuestionName[currentQuestion][i-1]);
 
             // Column 0 set
             for (int i = 1; i <= studentNum; i++)
