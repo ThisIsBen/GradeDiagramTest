@@ -31,7 +31,7 @@ namespace GradeDiagramTest
         private int MemberQuestionNum;
         private int studentNum;
         private int currentQuestion=0;
-        private int data_implicit_num = 1;
+        private int data_implicit_num = 1;//小題的題數，因為不會呈現，後面資料往前一格
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
         
