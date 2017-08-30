@@ -55,8 +55,8 @@ namespace GradeDiagramTest
                 ScoreAnalysisList.Add(log);
 
             }
-
-
+            
+            
             //// Add a row named Avg
             AddRow("Avg");
             
@@ -68,6 +68,9 @@ namespace GradeDiagramTest
             
 
             /// plot the chart
+            /// 
+            MemberQueAvgSort();
+
             tab_content_chart_control.InnerHtml = AddChartTabPaneHtml();
 
             chartPlotJs.InnerHtml = AddChartPlotJs();
@@ -88,7 +91,7 @@ namespace GradeDiagramTest
             }
             return sb.ToString();
         }
-
+        
         private string AddChartPlotJs()
         {  
             StringBuilder sb=new StringBuilder();
@@ -167,7 +170,8 @@ namespace GradeDiagramTest
                 sb.Append(temp2);
 
             }
-            return  question + " : c3.generate({bindto: '." + question+"Chart" + "',data: {columns: [" + sb.ToString() + "],type : '" + type + "'}}),";
+            return question + " : c3.generate({bindto: '." + question + "Chart" + "',data: {columns: [" + sb.ToString() + "],type : '" + type 
+                + "'},pie:{label: {format: function (value, ratio, id) {return d3.format()(value);}}},donut:{label: {format: function (value, ratio, id) {return d3.format()(value);}}},bar: {width: {ratio: 0.2}},axis: {x: {type: 'category', categories: ['avg']}}}),";
 
         }
 
@@ -191,6 +195,33 @@ namespace GradeDiagramTest
                 QuestionAvgtest.Add(QuestionAvgTemp);
             }
 
+           
+        }
+
+        private void MemberQueAvgSort()
+        {
+            for (int question = 0; question < QuestionName.Length; question++)
+            {
+                for (int i = QuestionAvgtest[question].Length - 1; i > 0; i--)
+                    for (int j = 0; j < i; j++)
+                        if (QuestionAvgtest[question][j] > QuestionAvgtest[question][j + 1])
+                        {
+                            Swap(QuestionAvgtest[question],MemberQuestionName[question], j, j + 1);
+                        }
+
+            }
+        }
+        
+
+        private void Swap(int[] arrayInt, string[] arrayStr, int indexA, int indexB)
+        {
+            int tmpInt = arrayInt[indexA];
+            arrayInt[indexA] = arrayInt[indexB];
+            arrayInt[indexB] = tmpInt;
+
+            string tmpStr = arrayStr[indexA];
+            arrayStr[indexA] = arrayStr[indexB];
+            arrayStr[indexB] = tmpStr;
 
         }
 
