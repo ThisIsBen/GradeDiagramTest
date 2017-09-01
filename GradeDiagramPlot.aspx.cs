@@ -26,7 +26,7 @@ namespace GradeDiagramTest
         private int table_rows;
         private int table_cols;
 
-        private List<int[]> QuestionAvgtest=new List<int[]>();
+        private List<int[]> QuestionAvg=new List<int[]>();
 
         private int MemberQuestionNum;
         private int studentNum;
@@ -163,10 +163,10 @@ namespace GradeDiagramTest
         private string ChartPlotStr(string type,string question,int question_number)
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < QuestionAvgtest[question_number].Length; i++)
+            for (int i = 0; i < QuestionAvg[question_number].Length; i++)
             {
                 string temp2;
-                temp2 = "['" + MemberQuestionName[question_number][i]+ "'," + QuestionAvgtest[question_number][i] + "],";
+                temp2 = "['" + MemberQuestionName[question_number][i]+ "'," + QuestionAvg[question_number][i] + "],";
                 sb.Append(temp2);
 
             }
@@ -192,7 +192,7 @@ namespace GradeDiagramTest
                     sum = sum / ScoreAnalysisList.Count;
                     QuestionAvgTemp[index] = sum;
                 }
-                QuestionAvgtest.Add(QuestionAvgTemp);
+                QuestionAvg.Add(QuestionAvgTemp);
             }
 
            
@@ -202,11 +202,11 @@ namespace GradeDiagramTest
         {
             for (int question = 0; question < QuestionName.Length; question++)
             {
-                for (int i = QuestionAvgtest[question].Length - 1; i > 0; i--)
+                for (int i = QuestionAvg[question].Length - 1; i > 0; i--)
                     for (int j = 0; j < i; j++)
-                        if (QuestionAvgtest[question][j] > QuestionAvgtest[question][j + 1])
+                        if (QuestionAvg[question][j] > QuestionAvg[question][j + 1])
                         {
-                            Swap(QuestionAvgtest[question],MemberQuestionName[question], j, j + 1);
+                            Swap(QuestionAvg[question],MemberQuestionName[question], j, j + 1);
                         }
 
             }
@@ -334,7 +334,7 @@ namespace GradeDiagramTest
             //Average Calculage
             for (int index = 0; index <MemberQuestionNum; index++)
             {
-                string sum = QuestionAvgtest[currentQuestion][index].ToString();
+                string sum = QuestionAvg[currentQuestion][index].ToString();
                 InsertTableStr(rowsCount, index + FirstColDefault.Length,sum);
             }
             
