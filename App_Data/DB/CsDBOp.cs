@@ -56,7 +56,14 @@ using System.Threading.Tasks;
             string sql = string.Format("Select * From ScoreDetail ");
             return GetDataTable(sql);
         }
-        
+
+        //a input to select all data if CPaperID is cPaperID
+        public static DataTable GetAllTBData(string cPaperID)
+        {
+            string sql = string.Format("Select * From ScoreDetail Where CPaperID In('"+cPaperID+"')");
+            return GetDataTable(sql);
+        }
+
 
         public static int InsertScore(string ID,string grade)
         {

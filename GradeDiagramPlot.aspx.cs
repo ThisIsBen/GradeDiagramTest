@@ -18,7 +18,7 @@ namespace GradeDiagramTest
         public string[] QuestionName = {"Knee","Hand" };
         public List<string[]> MemberQuestionName=new List<string[]>();
         public string []FirstColDefault = {"學生","總分"};
-
+        public string CPaperID_Selector = "001";  //This is CPaperID test variable
 
         //
        
@@ -44,14 +44,24 @@ namespace GradeDiagramTest
 
             //下方3個變數的值之後會由DB取得
             //get all the data from ScoreDetailTB table
-            DataTable dt = CsDBOp.GetAllTBData();
+
+            //Test for CPaperID with input '001'
+            DataTable dt = CsDBOp.GetAllTBData(CPaperID_Selector);
             MemberQuestionName.Add(new string[] { "adducor", "fadf", "asdf", "dfefa","adsfas" });
             MemberQuestionName.Add(new string[]{ "adducor", "fadf", "asdf", "dfefa" } );
+
 
             //Get the retrieved data from each row of the retrieved data table.
             foreach (DataRow dr in dt.Rows)
             {
-                ScoreAnalysisM log = new ScoreAnalysisM(dr.Field<string>("StuCouHWDe_ID"), dr.Field<string>("Grade"));
+
+               Debug.WriteLine(dr.Field<string>("StuCouHWDe_ID") + dr.Field<string>("CPaperID"));
+                string StudentIDTemp = dr.Field<string>("StuCouHWDe_ID");
+                string GradeStrTemp = dr.Field<string>("Grade");
+                if (GradeStrTemp == null)
+                    continue;
+
+                ScoreAnalysisM log = new ScoreAnalysisM(StudentIDTemp,GradeStrTemp);
                 ScoreAnalysisList.Add(log);
 
             }

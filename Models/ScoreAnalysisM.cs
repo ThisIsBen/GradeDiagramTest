@@ -17,6 +17,8 @@ public class ScoreAnalysisM
 
     public ScoreAnalysisM(string id,string grade_str)
     {
+        
+
         string[] temp_str_arr = MemberQueSpilt(grade_str);
         StuCouHWDe_ID = id;
         for (int i = 0; i < QuestionNum; i++)

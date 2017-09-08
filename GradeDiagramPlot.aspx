@@ -1,4 +1,4 @@
-﻿-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GradeDiagramPlot.aspx.cs" Inherits="GradeDiagramTest.GradeDiagramPlot" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GradeDiagramPlot.aspx.cs" Inherits="GradeDiagramTest.GradeDiagramPlot" %>
 
 <!DOCTYPE html>
 
