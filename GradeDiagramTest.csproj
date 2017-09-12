@@ -329,7 +329,6 @@
     </Compile>
     <Compile Include="App_Data\DB\CsDBConnection.cs" />
     <Compile Include="App_Data\DB\CsDBOp.cs" />
-    <Compile Include="App_Data\Model\ScoreAnalysisM.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -366,6 +365,7 @@
       <DependentUpon>GradeDiagramPlot.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ScoreAnalysisM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>

@@ -18,7 +18,7 @@ namespace GradeDiagramTest
         public string[] QuestionName = {"Knee","Hand" };
         public List<string[]> MemberQuestionName=new List<string[]>();
         public string []FirstColDefault = {"學生","總分"};
-
+        public string CPaperID_Selector = "001";  //This is CPaperID test variable
 
         //
        
@@ -26,7 +26,7 @@ namespace GradeDiagramTest
         private int table_rows;
         private int table_cols;
 
-        private List<int[]> QuestionAvgtest=new List<int[]>();
+        private List<int[]> QuestionAvg=new List<int[]>();
 
         private int MemberQuestionNum;
         private int studentNum;
@@ -44,14 +44,24 @@ namespace GradeDiagramTest
 
             //下方3個變數的值之後會由DB取得
             //get all the data from ScoreDetailTB table
-            DataTable dt = CsDBOp.GetAllTBData();
+
+            //Test for CPaperID with input '001'
+            DataTable dt = CsDBOp.GetAllTBData(CPaperID_Selector);
             MemberQuestionName.Add(new string[] { "adducor", "fadf", "asdf", "dfefa","adsfas" });
             MemberQuestionName.Add(new string[]{ "adducor", "fadf", "asdf", "dfefa" } );
+
 
             //Get the retrieved data from each row of the retrieved data table.
             foreach (DataRow dr in dt.Rows)
             {
-                ScoreAnalysisM log = new ScoreAnalysisM(dr.Field<string>("StuCouHWDe_ID"), dr.Field<string>("Grade"));
+
+               
+                string StudentIDTemp = dr.Field<string>("StuCouHWDe_ID");
+                string GradeStrTemp = dr.Field<string>("Grade");
+                if (GradeStrTemp == null)
+                    continue;
+                Debug.WriteLine(StudentIDTemp + GradeStrTemp);
+                ScoreAnalysisM log = new ScoreAnalysisM(StudentIDTemp,GradeStrTemp);
                 ScoreAnalysisList.Add(log);
 
             }
@@ -163,10 +173,10 @@ namespace GradeDiagramTest
         private string ChartPlotStr(string type,string question,int question_number)
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < QuestionAvgtest[question_number].Length; i++)
+            for (int i = 0; i < QuestionAvg[question_number].Length; i++)
             {
                 string temp2;
-                temp2 = "['" + MemberQuestionName[question_number][i]+ "'," + QuestionAvgtest[question_number][i] + "],";
+                temp2 = "['" + MemberQuestionName[question_number][i]+ "'," + QuestionAvg[question_number][i] + "],";
                 sb.Append(temp2);
 
             }
@@ -192,7 +202,7 @@ namespace GradeDiagramTest
                     sum = sum / ScoreAnalysisList.Count;
                     QuestionAvgTemp[index] = sum;
                 }
-                QuestionAvgtest.Add(QuestionAvgTemp);
+                QuestionAvg.Add(QuestionAvgTemp);
             }
 
            
@@ -202,11 +212,11 @@ namespace GradeDiagramTest
         {
             for (int question = 0; question < QuestionName.Length; question++)
             {
-                for (int i = QuestionAvgtest[question].Length - 1; i > 0; i--)
+                for (int i = QuestionAvg[question].Length - 1; i > 0; i--)
                     for (int j = 0; j < i; j++)
-                        if (QuestionAvgtest[question][j] > QuestionAvgtest[question][j + 1])
+                        if (QuestionAvg[question][j] > QuestionAvg[question][j + 1])
                         {
-                            Swap(QuestionAvgtest[question],MemberQuestionName[question], j, j + 1);
+                            Swap(QuestionAvg[question],MemberQuestionName[question], j, j + 1);
                         }
 
             }
@@ -229,8 +239,9 @@ namespace GradeDiagramTest
         {
             currentQuestion = Question_num;
             table_cols = ScoreAnalysisList[0].Grade[currentQuestion].Length - data_implicit_num;
-            table_rows = ScoreAnalysisList.Count;
-            studentNum = table_rows;
+            studentNum = ScoreAnalysisList.Count;
+            table_rows = studentNum+AddRowsName.Count;
+            
             MemberQuestionNum = ScoreAnalysisList[0].MemberQuestionNum[currentQuestion];
             
         }
@@ -263,6 +274,14 @@ namespace GradeDiagramTest
             tc_temp = (TableCell)FindControl("TextBoxRow_"+row+"Col_" + col+"_"+currentQuestion);
             tc_temp.Text = str_insert;
         }
+        private void InsertTableStr(int row, int col, string str_insert,string Classname_Insert)
+        {
+            TableCell tc_temp;    
+            tc_temp = (TableCell)FindControl("TextBoxRow_" + row + "Col_" + col + "_" + currentQuestion);
+            tc_temp.Attributes.Add("class", Classname_Insert);
+            tc_temp.Text = str_insert;
+        }
+
 
         private string GetTableStr(int row, int col)
         {
@@ -274,13 +293,13 @@ namespace GradeDiagramTest
         private void AddRow(string RowName)
         {
             AddRowsName.Add(RowName);
-            table_rows++;
+            
         }
 
         private void AddCol(string ColName)
         {
             AddColsName.Add(ColName);
-            table_cols++;
+            
         }
 
         private void GenerateTable(int colsCount, int rowsCount,Table table_select)
@@ -306,7 +325,7 @@ namespace GradeDiagramTest
                 table_select.Rows.Add(row);
             }
 
-            for (int i = 1; i <= rowsCount - AddRowsName.Count; i++)
+            for (int i = 1; i <= studentNum; i++)
             {
                 for (int j = ScoreAnalysisList[i - 1].QueIndex_start; j <ScoreAnalysisList[i - 1].Grade[currentQuestion].Length; j++)
                     InsertTableStr(i, j - data_implicit_num, ScoreAnalysisList[i - 1].Grade[currentQuestion][j]);
@@ -334,8 +353,8 @@ namespace GradeDiagramTest
             //Average Calculage
             for (int index = 0; index <MemberQuestionNum; index++)
             {
-                string sum = QuestionAvgtest[currentQuestion][index].ToString();
-                InsertTableStr(rowsCount, index + FirstColDefault.Length,sum);
+                string sum = QuestionAvg[currentQuestion][index].ToString();
+                InsertTableStr(rowsCount, index + FirstColDefault.Length,sum,"Average");
             }
             
             
