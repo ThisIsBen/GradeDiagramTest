@@ -19,15 +19,6 @@ namespace GradeDiagramTest
             //Response.Write("<script>console.log(" + CsDBOp.InsertScore(ID, grade) + ");</script>");
 
 
-            //取得資料
-            List<ScoreAnalysisM> ScoreAnalysisList = new List<ScoreAnalysisM>();
-
-
-            //下方3個變數的值之後會由DB取得
-            //get all the data from ScoreDetailTB table
-            DataTable dt = CsDBOp.GetAllTBData();
-
-
             //get the retrieved data from each row of the retrieved data table.
            
 

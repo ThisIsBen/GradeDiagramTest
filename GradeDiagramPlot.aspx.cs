@@ -15,8 +15,8 @@ namespace GradeDiagramTest
     public partial class GradeDiagramPlot : System.Web.UI.Page
     {
         // Student Scroe and Question from Database
-        public string[] QuestionName = {"Knee","Hand" };
-        public List<string[]> MemberQuestionName=new List<string[]>();
+        
+        
         public string []FirstColDefault = {"學生","總分"};
         public string CPaperID_Selector = "001";  //This is CPaperID test variable
 
@@ -34,8 +34,8 @@ namespace GradeDiagramTest
         private int data_implicit_num = 1;//小題的題數，因為不會呈現，後面資料往前一格
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
-        
-        
+        public string[] QuestionName;
+        public List<string[]> MemberQuestionName=new List<string[]>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -43,13 +43,23 @@ namespace GradeDiagramTest
             
 
             //下方3個變數的值之後會由DB取得
-            //get all the data from ScoreDetailTB table
+            //get all the data from IPCExamHWCorrectAnswer table
+            DataTable dt = CsDBOp.GetAllTBData("IPCExamHWCorrectAnswer",CPaperID_Selector);
+
+
 
             //Test for CPaperID with input '001'
-            DataTable dt = CsDBOp.GetAllTBData(CPaperID_Selector);
-            MemberQuestionName.Add(new string[] { "adducor", "fadf", "asdf", "dfefa","adsfas" });
-            MemberQuestionName.Add(new string[]{ "adducor", "fadf", "asdf", "dfefa" } );
+            QuestionName=dt.Rows[0].Field<string>("QuestionBodyPart").Split(',');
+            string TempCA=dt.Rows[0].Field<string>("correctAnswer");
+            foreach (string TempCA_fullstr in TempCA.Remove(TempCA.Length - 1).Split(':'))
+            {
+                 
+                 MemberQuestionName.Add(TempCA_fullstr.Split(','));
+            }
+            
+           
 
+            dt = CsDBOp.GetAllTBData("StuCouHWDe_IPC", CPaperID_Selector);
 
             //Get the retrieved data from each row of the retrieved data table.
             foreach (DataRow dr in dt.Rows)
@@ -79,13 +89,10 @@ namespace GradeDiagramTest
 
             /// plot the chart
             /// 
-            MemberQueAvgSort();
+            //MemberQueAvgSort();
 
             tab_content_chart_control.InnerHtml = AddChartTabPaneHtml();
 
-            chartPlotJs.InnerHtml = AddChartPlotJs();
-            
-            onclick_add.InnerHtml = AddOnclickJS();
             
         }
 
@@ -101,34 +108,10 @@ namespace GradeDiagramTest
             }
             return sb.ToString();
         }
-        
-        private string AddChartPlotJs()
-        {  
-            StringBuilder sb=new StringBuilder();
-            sb.Append("<script> var chart={");
-            for (int i = 0; i < QuestionName.Length; i++)
-                sb.Append(ChartPlotStr("bar", QuestionName[i],i));
-            sb.Append("}</script>");
-            return sb.ToString();
-        }
+  
 
 
-        private string AddOnclickJS()
-        {
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<script> question='" + QuestionName[0]+"';");
-
-            sb.Append("$(document).ready(function(){");
-            foreach (string question in QuestionName)
-            {
-                sb.Append( "$(\"."+question+"\").click(function () { question=\""+question+"\";chart[question].transform(type); });");
-
-            }
-            sb.Append("})</script>");
-            return sb.ToString();
-
-        }
+       
 
 
         private void AddDynamicTableHtml(int tab_num, string[] question_name)
@@ -156,34 +139,21 @@ namespace GradeDiagramTest
                     temp_div.Attributes.Add("class", "tab-pane fade in active "+question_name[i]+"Table");                   
                     
                     // nav_control innerHtml add string 
-                    sb.Append("<li class=\"active "+ question_name[i]+ "\"><a data-toggle=\"tab\" href=\"." + question_name[i] + "Table" + "\">" + question_name[i] +"</a></li>");
+                    sb.Append("<li class='Question active " + question_name[i] + "'><a data-toggle='tab' href='." + question_name[i] + "Table" + "'>" + question_name[i] + "</a></li>");
                 }
                 else
                 {
                     temp_div.Attributes.Add("class", "tab-pane fade "+ question_name[i] + "Table");
                     
                     // nav_control innerHtml add string 
-                    sb.Append("<li class=\"" + question_name[i] + "\"><a data-toggle=\"tab\" href=\"." + question_name[i] + "Table" + "\">" + question_name[i] + "</a></li>");
+                    sb.Append("<li class='Question " + question_name[i] + "'><a data-toggle='tab' href='." + question_name[i] + "Table" + "'>" + question_name[i] + "</a></li>");
                 }
             }
             nav_control.InnerHtml = sb.ToString();
 
         }
 
-        private string ChartPlotStr(string type,string question,int question_number)
-        {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < QuestionAvg[question_number].Length; i++)
-            {
-                string temp2;
-                temp2 = "['" + MemberQuestionName[question_number][i]+ "'," + QuestionAvg[question_number][i] + "],";
-                sb.Append(temp2);
-
-            }
-            return question + " : c3.generate({bindto: '." + question + "Chart" + "',data: {columns: [" + sb.ToString() + "],type : '" + type 
-                + "'},pie:{label: {format: function (value, ratio, id) {return d3.format()(value);}}},donut:{label: {format: function (value, ratio, id) {return d3.format()(value);}}},bar: {width: {ratio: 0.2}},axis: {x: {type: 'category', categories: ['avg']}}}),";
-
-        }
+ 
 
         private void MemberQueAvgCal()
         {
@@ -208,32 +178,6 @@ namespace GradeDiagramTest
            
         }
 
-        private void MemberQueAvgSort()
-        {
-            for (int question = 0; question < QuestionName.Length; question++)
-            {
-                for (int i = QuestionAvg[question].Length - 1; i > 0; i--)
-                    for (int j = 0; j < i; j++)
-                        if (QuestionAvg[question][j] > QuestionAvg[question][j + 1])
-                        {
-                            Swap(QuestionAvg[question],MemberQuestionName[question], j, j + 1);
-                        }
-
-            }
-        }
-        
-
-        private void Swap(int[] arrayInt, string[] arrayStr, int indexA, int indexB)
-        {
-            int tmpInt = arrayInt[indexA];
-            arrayInt[indexA] = arrayInt[indexB];
-            arrayInt[indexB] = tmpInt;
-
-            string tmpStr = arrayStr[indexA];
-            arrayStr[indexA] = arrayStr[indexB];
-            arrayStr[indexB] = tmpStr;
-
-        }
 
         private void MemberVariableSet(int Question_num)
         {
@@ -336,7 +280,7 @@ namespace GradeDiagramTest
                 InsertTableStr(0, i, FirstColDefault[i]);
             
             for (int i = 1; i <=MemberQuestionNum; i++)
-                InsertTableStr(0, i+FirstColDefault.Length-1, MemberQuestionName[currentQuestion][i-1]);
+                InsertTableStr(0, i+FirstColDefault.Length-1, MemberQuestionName[currentQuestion][i],"MQ"+QuestionName[currentQuestion]);
 
             // Column 0 set
             for (int i = 1; i <= studentNum; i++)
@@ -354,7 +298,7 @@ namespace GradeDiagramTest
             for (int index = 0; index <MemberQuestionNum; index++)
             {
                 string sum = QuestionAvg[currentQuestion][index].ToString();
-                InsertTableStr(rowsCount, index + FirstColDefault.Length,sum,"Average");
+                InsertTableStr(rowsCount, index + FirstColDefault.Length,sum,"Average"+QuestionName[currentQuestion]);
             }
             
             

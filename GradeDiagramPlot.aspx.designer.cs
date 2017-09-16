@@ -22,15 +22,6 @@ namespace GradeDiagramTest {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// onclick_add 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl onclick_add;
-        
-        /// <summary>
         /// nav_control 控制項。
         /// </summary>
         /// <remarks>
@@ -74,14 +65,5 @@ namespace GradeDiagramTest {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab_content_chart_control;
-        
-        /// <summary>
-        /// chartPlotJs 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chartPlotJs;
     }
 }
