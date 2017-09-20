@@ -60,7 +60,7 @@ using System.Threading.Tasks;
         //a input to select all data if CPaperID is cPaperID
         public static DataTable GetAllTBData(string DB_Child,string cPaperID)
         {
-            string sql = string.Format("Select * From " + DB_Child + " Where CPaperID In('" + cPaperID + "')");
+            string sql = string.Format("Select * From " + DB_Child + " Where cPaperID In('" + cPaperID + "')");
             return GetDataTable(sql);
         }
 
