@@ -18,7 +18,7 @@ namespace GradeDiagramTest
         
         
         public string []FirstColDefault = {"學生","總分"};
-        public string CPaperID_Selector = "001";  //This is CPaperID test variable
+        public string CPaperID_Selector;  //This is CPaperID send by Url
 
         //
        
@@ -44,11 +44,17 @@ namespace GradeDiagramTest
 
             //下方3個變數的值之後會由DB取得
             //get all the data from IPCExamHWCorrectAnswer table
+
+
+            
+            CPaperID_Selector=Request.QueryString["CPaperID"];
             DataTable dt = CsDBOp.GetAllTBData("IPCExamHWCorrectAnswer",CPaperID_Selector);
+            //Exception for empty table data
+            if (dt.Rows.Count==0)
+                Response.End();
 
 
-
-            //Test for CPaperID with input '001'
+            //Test for CPaperID with input
             QuestionName=dt.Rows[0].Field<string>("QuestionBodyPart").Split(',');
             string TempCA=dt.Rows[0].Field<string>("correctAnswer");
             foreach (string TempCA_fullstr in TempCA.Remove(TempCA.Length - 1).Split(':'))
@@ -70,7 +76,6 @@ namespace GradeDiagramTest
                 string GradeStrTemp = dr.Field<string>("Grade");
                 if (GradeStrTemp == null)
                     continue;
-                Debug.WriteLine(StudentIDTemp + GradeStrTemp);
                 ScoreAnalysisM log = new ScoreAnalysisM(StudentIDTemp,GradeStrTemp);
                 ScoreAnalysisList.Add(log);
 
