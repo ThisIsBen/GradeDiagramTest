@@ -30,7 +30,7 @@ public class ScoreAnalysisM
 
     private string[] MemberQueSpilt(string grade_str)
     {
-        string[] temp_str_arr = grade_str.Split(':');
+        string[] temp_str_arr = grade_str.Remove(grade_str.Length-1).Split(':');
         QuestionNum = temp_str_arr.Length;
         MemberQuestionNum = new int[QuestionNum];
         return temp_str_arr;

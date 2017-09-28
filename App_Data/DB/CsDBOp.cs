@@ -52,36 +52,36 @@ using System.Threading.Tasks;
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static DataTable GetAllTBData() {
-            string sql = string.Format("Select * From ScoreDetail ");
+        public static DataTable GetAllTBData(string DB_Child) {
+            string sql = string.Format("Select * " + DB_Child);
             return GetDataTable(sql);
         }
 
         //a input to select all data if CPaperID is cPaperID
-        public static DataTable GetAllTBData(string cPaperID)
+        public static DataTable GetAllTBData(string DB_Child,string cPaperID)
         {
-            string sql = string.Format("Select * From ScoreDetail Where CPaperID In('"+cPaperID+"')");
+            string sql = string.Format("Select * From " + DB_Child + " Where cPaperID In('" + cPaperID + "')");
             return GetDataTable(sql);
         }
 
 
-        public static int InsertScore(string ID,string grade)
+        public static int InsertScore(string DB_Child,string ID,string grade)
         {
-            string  sql = string.Format("Insert into ScoreDetail VALUES( '{0}', '{1}' )", ID,grade);
+            string sql = string.Format("Insert into " + DB_Child + " VALUES( '{0}', '{1}' )", ID, grade);
             return InsertData(sql);
         }
 
-    public static int UpdateScore(string ID, string NewGrade)
-    {
-        string sql = string.Format("Update ScoreDetail set Grade = ' {1:d} ' where StuCouHWDe_ID = '{0}'  ", ID, NewGrade);
-        return UpdateData(sql);
-    }
+        public static int UpdateScore(string DB_Child, string ID, string NewGrade)
+        {
+            string sql = string.Format("Update " + DB_Child + " set Grade = ' {1:d} ' where StuCouHWDe_ID = '{0}'  ", ID, NewGrade);
+            return UpdateData(sql);
+        }
 
-    public static int DeleteScore(string ID)
-    {
-        string sql = string.Format("Delete from ScoreDetail where StuCouHWDe_ID = '{0}' ", ID);
-        return UpdateData(sql);
-    }
+        public static int DeleteScore(string DB_Child, string ID)
+        {
+            string sql = string.Format("Delete from " + DB_Child + " where StuCouHWDe_ID = '{0}' ", ID);
+            return UpdateData(sql);
+        }
 
 
 
