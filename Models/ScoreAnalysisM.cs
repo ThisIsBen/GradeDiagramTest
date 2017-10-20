@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using System.Text;
 /// <summary>
 /// Summary description for ScoreAnalysisM
 /// </summary>
@@ -52,7 +52,22 @@ public class ScoreAnalysisM
             }
             Grade[i][0] = (correct_num * grade_perQuestion).ToString();
         }
-    }
 
+        CsDBOp.UpdateScore("StuCouHWDe_IPC", StuCouHWDe_ID, SQLGradeStr_Upgrade(Grade));
+    }
+    string SQLGradeStr_Upgrade(List<string[]> grade)
+    {
+        StringBuilder sb = new StringBuilder() ;
+        for (int i = 0; i < grade.Count; i++)
+        {
+            sb.Append((i + 1).ToString());
+            sb.Append("," + grade[i][0]);
+            sb.Append("," + (grade[i].Length-1).ToString());
+            for (int index = 0; index < grade[i].Length - 1; index++)
+                sb.Append("," + grade[i][index + 1]);
+            sb.Append(':');
+        }
+        return sb.ToString();
+    }
 
 }
