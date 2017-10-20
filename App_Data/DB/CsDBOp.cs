@@ -14,7 +14,7 @@ using System.Threading.Tasks;
         #region Common
         private static DataTable GetDataTable(string sql)
         {
-            return CsDBConnection.GetDataSet(sql).Tables[0];
+            return CsDBConnection. GetDataSet(sql).Tables[0];
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ using System.Threading.Tasks;
         }
 
         //a input to select all data if CPaperID is cPaperID
-        public static DataTable GetAllTBData(string DB_Child,string cPaperID)
+        public static DataTable GetAllTBData(string DB_Child, string cActivityID)
         {
-            string sql = string.Format("Select * From " + DB_Child + " Where cPaperID In('" + cPaperID + "')");
+            string sql = string.Format("Select * From " + DB_Child + " Where cActivityID In('" + cActivityID + "')");
             return GetDataTable(sql);
         }
 

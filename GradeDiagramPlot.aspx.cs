@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -27,15 +28,15 @@ namespace GradeDiagramTest
         private int table_cols;
 
         private List<int[]> QuestionAvg=new List<int[]>();
-
+        private List<string> correctXML = new List<string>();
         private int MemberQuestionNum;
         private int studentNum;
         private int currentQuestion=0;
-        private int data_implicit_num = 1;//小題的題數，因為不會呈現，後面資料往前一格
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
         public string[] QuestionName;
-        public List<string[]> MemberQuestionName=new List<string[]>();
+        public List<string[]> MemberQuestionAnswer=new List<string[]>();
+        private Hashtable[] correctAnswerHT ;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -47,25 +48,40 @@ namespace GradeDiagramTest
 
 
 
-            string cPaperID_Selector = Request.QueryString["cPaperID"];
-            DataTable dt = CsDBOp.GetAllTBData("IPCExamHWCorrectAnswer",cPaperID_Selector);
+            string cActivityID_Selector = Request.QueryString["cActivityID"];
+            DataTable dt = CsDBOp.GetAllTBData("IPCExamHWCorrectAnswer", cActivityID_Selector);
             //Exception for empty table data
             if (dt.Rows.Count==0)
                 Response.End();
 
 
-            //Test for CPaperID with input
+            //Test for cActivityID with input for IPCExamHWCorrectAnswer
             QuestionName=dt.Rows[0].Field<string>("QuestionBodyPart").Split(',');
             string TempCA=dt.Rows[0].Field<string>("correctAnswer");
             foreach (string TempCA_fullstr in TempCA.Remove(TempCA.Length - 1).Split(':'))
             {
                  
-                 MemberQuestionName.Add(TempCA_fullstr.Split(','));
+                 MemberQuestionAnswer.Add(TempCA_fullstr.Split(','));
             }
-            
-           
 
-            dt = CsDBOp.GetAllTBData("StuCouHWDe_IPC", cPaperID_Selector);
+            string temp_str= dt.Rows[0].Field<string>("correctAnswerOrdering");
+            string[] tempCAOstr = temp_str.Remove(temp_str.Length-1).Split(':');
+            correctAnswerHT = new Hashtable[tempCAOstr.Length];
+            int index = 0;
+            foreach (string tempCAOstr_split in tempCAOstr)
+            {
+                string[] tempCAOstr_in_split = tempCAOstr_split.Split(',');
+                correctXML.Add(tempCAOstr_in_split[0]);
+                correctAnswerHT[index] = new Hashtable();
+                for (int i = 1; i < tempCAOstr_in_split.Length; i++)
+                {
+                    correctAnswerHT[index].Add(tempCAOstr_in_split[i], MemberQuestionAnswer[index][i]);
+                }
+                index++;
+            }
+
+
+            dt = CsDBOp.GetAllTBData("StuCouHWDe_IPC", cActivityID_Selector);
 
             //Get the retrieved data from each row of the retrieved data table.
             foreach (DataRow dr in dt.Rows)
@@ -73,11 +89,19 @@ namespace GradeDiagramTest
 
                
                 string StudentIDTemp = dr.Field<string>("StuCouHWDe_ID");
-                string GradeStrTemp = dr.Field<string>("Grade");
-                if (GradeStrTemp == null)
+                string AnsewerTemp = dr.Field<string>("StudentAnswer");
+                string QuesOrdering = dr.Field<string>("QuesOrdering");
+                if (AnsewerTemp == null)
                     continue;
-                ScoreAnalysisM log = new ScoreAnalysisM(StudentIDTemp,GradeStrTemp);
+                ScoreAnalysisM log = new ScoreAnalysisM(StudentIDTemp, AnsewerTemp, QuesOrdering,correctXML,correctAnswerHT);
                 ScoreAnalysisList.Add(log);
+
+                //比對學生作答內容中的XML檔名
+                if (log.XMLerror)
+                {
+                    Response.Write("alert('Student answer XML file name does not match Correct answer XML file name')");
+                    Response.End();
+                }
 
             }
             
@@ -184,7 +208,7 @@ namespace GradeDiagramTest
         private void MemberVariableSet(int Question_num)
         {
             currentQuestion = Question_num;
-            table_cols = ScoreAnalysisList[0].Grade[currentQuestion].Length - data_implicit_num;
+            table_cols = ScoreAnalysisList[0].Grade[currentQuestion].Length+1;// +1 mean student column
             studentNum = ScoreAnalysisList.Count;
             table_rows = studentNum+AddRowsName.Count;
             
@@ -273,8 +297,8 @@ namespace GradeDiagramTest
 
             for (int i = 1; i <= studentNum; i++)
             {
-                for (int j = ScoreAnalysisList[i - 1].QueIndex_start; j <ScoreAnalysisList[i - 1].Grade[currentQuestion].Length; j++)
-                    InsertTableStr(i, j - data_implicit_num, ScoreAnalysisList[i - 1].Grade[currentQuestion][j]);
+                for (int j = 0; j <ScoreAnalysisList[i - 1].Grade[currentQuestion].Length; j++)
+                    InsertTableStr(i, j+1, ScoreAnalysisList[i - 1].Grade[currentQuestion][j]);
            }
             
             // Row 0 set
@@ -282,7 +306,7 @@ namespace GradeDiagramTest
                 InsertTableStr(0, i, FirstColDefault[i]);
             
             for (int i = 1; i <=MemberQuestionNum; i++)
-                InsertTableStr(0, i+FirstColDefault.Length-1, MemberQuestionName[currentQuestion][i],"MQ"+QuestionName[currentQuestion]);
+                InsertTableStr(0, i+FirstColDefault.Length-1, MemberQuestionAnswer[currentQuestion][i],"MQ"+QuestionName[currentQuestion]);
 
             // Column 0 set
             for (int i = 1; i <= studentNum; i++)
