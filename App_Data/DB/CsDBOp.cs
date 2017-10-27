@@ -73,7 +73,7 @@ using System.Threading.Tasks;
 
         public static int UpdateScore(string DB_Child, string ID, string NewGrade)
         {
-            string sql = string.Format("Update " + DB_Child + " set Grade = ' {1:d} ' where StuCouHWDe_ID = '{0}'  ", ID, NewGrade);
+            string sql = string.Format("Update " + DB_Child + " set Grade = '{1}' where StuCouHWDe_ID = '{0}'  ", ID, NewGrade);
             return UpdateData(sql);
         }
 

@@ -15,8 +15,29 @@ public class ScoreAnalysisM
     public int[] MemberQuestionNum;
     public int QueIndex_start=1;
     public bool XMLerror = false;
-  
 
+    public ScoreAnalysisM(string id, string GradeStr)
+    {
+        StuCouHWDe_ID = id;
+        string []QuestionGroup= GradeStr.Remove(GradeStr.Length-1).Split(':');
+        QuestionNum = QuestionGroup.Length;
+        
+        foreach (string temp_str in QuestionGroup)
+        {
+            string []str_add;
+            string [] temp_str_arr=temp_str.Split(',');
+           
+            str_add = new string[Convert.ToInt16(temp_str_arr[2])+1];
+            str_add[0] = temp_str_arr[1];
+            for (int i = 3; i < temp_str_arr.Length; i++)
+                str_add[i - 2] = temp_str_arr[i];
+            Grade.Add(str_add);
+        }
+        MemberQuestionNum = new int[QuestionNum];
+        for (int i = 0; i < QuestionNum; i++)
+            MemberQuestionNum[i] = Grade[i].Length-1;
+    }
+    
     public ScoreAnalysisM(string id, string AnswerStr,string QuesOdrStr,List<string> xmlFile ,Hashtable[] correctAnswerHT)
     {
 

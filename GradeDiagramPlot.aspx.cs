@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
-
+using System.Diagnostics;
 
 namespace GradeDiagramTest
 {
@@ -86,9 +86,16 @@ namespace GradeDiagramTest
             //Get the retrieved data from each row of the retrieved data table.
             foreach (DataRow dr in dt.Rows)
             {
-
-               
                 string StudentIDTemp = dr.Field<string>("StuCouHWDe_ID");
+                string Gradetemp = dr.Field<string>("Grade");
+                if (Gradetemp != null)
+                {
+                    ScoreAnalysisM log_temp = new ScoreAnalysisM(StudentIDTemp, Gradetemp);
+                    ScoreAnalysisList.Add(log_temp);
+                    continue;
+                }
+                    
+                
                 string AnsewerTemp = dr.Field<string>("StudentAnswer");
                 string QuesOrdering = dr.Field<string>("QuesOrdering");
                 if (AnsewerTemp == null)
@@ -243,6 +250,7 @@ namespace GradeDiagramTest
             TableCell tc_temp;
             tc_temp = (TableCell)FindControl("TextBoxRow_"+row+"Col_" + col+"_"+currentQuestion);
             tc_temp.Text = str_insert;
+            
         }
         private void InsertTableStr(int row, int col, string str_insert,string Classname_Insert)
         {
@@ -250,6 +258,7 @@ namespace GradeDiagramTest
             tc_temp = (TableCell)FindControl("TextBoxRow_" + row + "Col_" + col + "_" + currentQuestion);
             tc_temp.Attributes.Add("class", Classname_Insert);
             tc_temp.Text = str_insert;
+            
         }
 
 
@@ -315,10 +324,6 @@ namespace GradeDiagramTest
             for (int i = studentNum + 1; i <= rowsCount; i++)
                 InsertTableStr(i, 0, AddRowsName[i - rowsCount]);
 
-            // Add total column
-           for (int row = 1; row <= studentNum; row++)
-               InsertTableStr(row, 1, ScoreAnalysisList[row - 1].Grade[currentQuestion][1]);
-            
                 
             //Average Calculage
             for (int index = 0; index <MemberQuestionNum; index++)
@@ -326,7 +331,11 @@ namespace GradeDiagramTest
                 string sum = QuestionAvg[currentQuestion][index].ToString();
                 InsertTableStr(rowsCount, index + FirstColDefault.Length,sum,"Average"+QuestionName[currentQuestion]);
             }
-            
+            int avg_total=0;
+            for (int i = 0; i < studentNum; i++)
+                avg_total += Convert.ToInt16(ScoreAnalysisList[i].Grade[currentQuestion][0]);
+            avg_total /= studentNum;
+            InsertTableStr(rowsCount, 1, avg_total.ToString());
             
         }
 
