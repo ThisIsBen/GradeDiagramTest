@@ -88,7 +88,7 @@ namespace GradeDiagramTest
             {
                 string StudentIDTemp = dr.Field<string>("StuCouHWDe_ID");
                 string Gradetemp = dr.Field<string>("Grade");
-                if (Gradetemp != null)
+                if (Gradetemp != "")
                 {
                     ScoreAnalysisM log_temp = new ScoreAnalysisM(StudentIDTemp, Gradetemp);
                     ScoreAnalysisList.Add(log_temp);
