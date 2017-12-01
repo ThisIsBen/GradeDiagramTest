@@ -8,14 +8,20 @@ using System.Web;
 
     public static class CsDBConnection
     {
+        //To allow us access tables in  different DB 
+        /*
         private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SCOREDB"].ToString();
         private static SqlConnection batchConn = new SqlConnection(connectionString);
+         */ 
         private static Dictionary<string, SqlTransaction> batchTransation = new Dictionary<string, SqlTransaction>();
 
-        public static int ExecuteNonQuery(string sql)
+        public static int ExecuteNonQuery(string sql,string DBName)
         {
             try
             {
+                //To allow us access tables in  different DB 
+                string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings[DBName].ToString();
+                
                 SqlConnection conn = new SqlConnection(connectionString);
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -57,8 +63,12 @@ using System.Web;
         /// </summary>
         /// <param name="strSQL"></param>
         /// <returns></returns>
-        public static DataSet GetDataSet(string strSQL)
+        public static DataSet GetDataSet(string strSQL,string DBName)
         {
+
+            //To allow us access tables in  different DB 
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings[DBName].ToString();
+                
             System.Data.SqlClient.SqlDataAdapter sda = new SqlDataAdapter(strSQL, connectionString);
             DataSet dsResult = new DataSet();
             try
