@@ -14,7 +14,7 @@ using System.Threading.Tasks;
         //Other functions should denote that which database will the sql cmd execute on.
         private static string IPCTypeQuestionDB = "SCOREDB";
         private static string ProgramTypeQuestionDB = "CorrectStuHWDB";
-
+        private static string DB_Slector = ProgramTypeQuestionDB;
 
         #region Common
         private static DataTable GetDataTable(string sql,string DBName)
@@ -59,33 +59,33 @@ using System.Threading.Tasks;
         /// <returns></returns>
         public static DataTable GetAllTBData(string DB_Child) {
             string sql = string.Format("Select * " + DB_Child);
-            return GetDataTable(sql, IPCTypeQuestionDB);//execute the sql cmd in IPCTypeQuestionDB database
+            return GetDataTable(sql, DB_Slector);//execute the sql cmd in DB_Slector database
         }
 
         //a input to select all data if CPaperID is cPaperID
         public static DataTable GetAllTBData(string DB_Child, string cActivityID)
         {
             string sql = string.Format("Select * From " + DB_Child + " Where cActivityID In('" + cActivityID + "')");
-            return GetDataTable(sql, IPCTypeQuestionDB);//execute the sql cmd in IPCTypeQuestionDB database
+            return GetDataTable(sql, DB_Slector);//execute the sql cmd in DB_Slector database
         }
 
 
         public static int InsertScore(string DB_Child,string ID,string grade)
         {
             string sql = string.Format("Insert into " + DB_Child + " VALUES( '{0}', '{1}' )", ID, grade);
-            return InsertData(sql, IPCTypeQuestionDB);//execute the sql cmd in IPCTypeQuestionDB database
+            return InsertData(sql, DB_Slector);//execute the sql cmd in DB_Slector database
         }
 
         public static int UpdateScore(string DB_Child, string ID, string NewGrade)
         {
             string sql = string.Format("Update " + DB_Child + " set Grade = '{1}' where StuCouHWDe_ID = '{0}'  ", ID, NewGrade);
-            return UpdateData(sql, IPCTypeQuestionDB);//execute the sql cmd in IPCTypeQuestionDB database
+            return UpdateData(sql, DB_Slector);//execute the sql cmd in DB_Slector database
         }
 
         public static int DeleteScore(string DB_Child, string ID)
         {
             string sql = string.Format("Delete from " + DB_Child + " where StuCouHWDe_ID = '{0}' ", ID);
-            return UpdateData(sql, IPCTypeQuestionDB);//execute the sql cmd in IPCTypeQuestionDB database
+            return UpdateData(sql, DB_Slector);//execute the sql cmd in DB_Slector database
         }
 
 
