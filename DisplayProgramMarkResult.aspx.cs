@@ -35,7 +35,7 @@ namespace GradeDiagramTest
         private List<string> AddRowsName = new List<string>();
         private List<string> AddColsName = new List<string>();
         public string[] QuestionName;
-        public string[] MemberQuestionAnswer = {"", "Pass_compilation", "Success_execution", "Compare_situation" };
+        public string[] MemberQuestionAnswer = { "", "Pass_compilation", "Success_execution", "Compare_situation", "Remark" };
         private Hashtable[] correctAnswerHT;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -180,7 +180,7 @@ namespace GradeDiagramTest
         private void MemberVariableSet(int Question_num)
         {
             currentQuestion = Question_num;
-            table_cols = ScoreAnalysisList[0].Grade[currentQuestion].Length + 1;// +1 mean student column
+            table_cols =MemberQuestionAnswer.Length+1;// +1 mean student column
             studentNum = ScoreAnalysisList.Count;
             table_rows = studentNum + AddRowsName.Count;
 
@@ -275,15 +275,28 @@ namespace GradeDiagramTest
 
             for (int i = 1; i <= studentNum; i++)
             {
+                //check it is remark data
+                if (ScoreAnalysisList[i - 1].Grade[currentQuestion][0] == "-1")
+                {
+                    InsertTableStr(i, 5, "No file uploaded");
+                    TableRow test = (TableRow)FindControl("TextBoxRow_" + i + "Col_" + 5 + "_" + currentQuestion).Parent;
+                    test.Style.Add("background-color", "#ff9999");
+                    ScoreAnalysisList[i - 1].Grade[currentQuestion][0] = "0";
+
+                }
+
                 for (int j = 0; j < ScoreAnalysisList[i - 1].Grade[currentQuestion].Length; j++)
+                {
+                    
                     InsertTableStr(i, j + 1, ScoreAnalysisList[i - 1].Grade[currentQuestion][j]);
+                }
             }
 
             // Row 0 set
             for (int i = 0; i < FirstColDefault.Length; i++)
                 InsertTableStr(0, i, FirstColDefault[i]);
 
-            for (int i = 1; i <= MemberQuestionNum; i++)
+            for (int i = 1; i <= MemberQuestionAnswer.Length-1; i++)
                 InsertTableStr(0, i + FirstColDefault.Length - 1, MemberQuestionAnswer[i], "MQ" + QuestionName[currentQuestion]);
 
             // Column 0 set

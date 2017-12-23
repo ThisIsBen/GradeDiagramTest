@@ -8,7 +8,7 @@
     <script src="./d3-3.5.0/d3.min.js" charset="utf-8"></script>
     <script src="./c3-0.4.15/c3.min.js"></script>
     <script src="./Scripts/jquery-1.10.2.min.js"></script>
-    <script src="./Scripts/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         var question;
         var ChartArgArr;
@@ -102,17 +102,18 @@
     </script>
 
     <link rel="stylesheet" href="./c3-0.4.15/c3.css" />
-    <link rel="stylesheet" href="./Content/bootstrap.min.css" />
+    <link rel="stylesheet" href=".Content/DisplayProgram.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
 </head>
 
-<body>
+<body >
     <form id="form1" runat="server">
 
         <%-- Dynamic add javascript for auto type with qusetion change --%>
         
-
+        <div class="container" style="width:50%;align-self:center;text-align:center">
         <%-- Dynamic add tab for question --%>
         <ul id="nav_control" class="nav nav-tabs" runat="server">
         </ul>
@@ -138,7 +139,7 @@
 
         </div>
 
- 
+        </div>
             <script>
                 var question_arr = $(".Question a").map(function () { return this.innerText }).toArray();
                 question = question_arr[0];
