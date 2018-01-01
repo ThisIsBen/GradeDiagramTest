@@ -112,7 +112,7 @@
 
         <%-- Dynamic add javascript for auto type with qusetion change --%>
         
-
+        <div class="container" style="width:50%;align-self:center;text-align:center">
         <%-- Dynamic add tab for question --%>
         <ul id="nav_control" class="nav nav-tabs" runat="server">
         </ul>
@@ -137,7 +137,7 @@
         <div id="tab_content_chart_control" class="tab-content" runat="server">
 
         </div>
-
+        </div>
  
             <script>
                 var question_arr = $(".Question a").map(function () { return this.innerText }).toArray();

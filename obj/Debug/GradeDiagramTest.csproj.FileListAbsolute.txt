@@ -23,7 +23,6 @@ C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\Microsoft.Owin.Security
 C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\Microsoft.ScriptManager.MSAjax.dll
 C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\Microsoft.ScriptManager.WebForms.dll
 C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\Microsoft.Web.Infrastructure.dll
-C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\Newtonsoft.Json.dll
 C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\Owin.dll
 C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\System.Web.Optimization.dll
 C:\Users\Tim\Desktop\Web\WebProject\GradeDiagramTest\bin\System.Web.Providers.dll

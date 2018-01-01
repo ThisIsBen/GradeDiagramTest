@@ -289,11 +289,16 @@ namespace GradeDiagramTest
             table_select.Attributes.Add("cellpadding", "1");
             table_select.Attributes.Add("cellspacing", "1");
             table_select.Style.Add("width", "100%");
-       
+            table_select.Attributes.Add("class", "table");
             // Now iterate through the table and add your controls 
             for (int i = 0; i <= rowsCount; i++)
             {
                 TableRow row = new TableRow();
+                if (i % 2 == 0)
+                    row.Style.Add("background-color", "#e6ffff");
+                else
+                    row.Style.Add("background-color", "#ffffe6");
+
                 for (int j = 0; j < colsCount; j++)
                 {
                     TableCell cell = new TableCell();

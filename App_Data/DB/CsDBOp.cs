@@ -14,7 +14,7 @@ using System.Threading.Tasks;
         //Other functions should denote that which database will the sql cmd execute on.
         private static string IPCTypeQuestionDB = "SCOREDB";
         private static string ProgramTypeQuestionDB = "CorrectStuHWDB";
-        private static string DB_Slector = ProgramTypeQuestionDB;
+        private static string DB_Slector = IPCTypeQuestionDB;
 
         #region Common
         private static DataTable GetDataTable(string sql,string DBName)
